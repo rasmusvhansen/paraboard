@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+  </head>
+
+  <body>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet" />
+    <div class="keyboard">
+      <h1 id="alphabet"></h1>
+      <div id="marker"></div>
+    </div>
+
+    <div id="text"></div>
+
+    <div id="settings">
+      <div class="dialog">
+        <h1>Indstillinger</h1>
+
+        <label for="input-alphabet">Alfabet</label>
+        <input class="alphabet" id="alphabet-input" />
+
+        <h2>Taster</h2>
+        <label for="key-left">Venstre</label>
+        <button class="key" id="key-left"></button>
+
+        <label for="key-right">Højre</label>
+        <button class="key" id="key-right"></button>
+
+        <label for="key-pick">Vælg bogstav</label>
+        <button class="key" id="key-pick"></button>
+
+        <label for="key-space">Mellemrum</label>
+        <button class="key" id="key-space"></button>
+
+        <label for="key-backspace">Slet bogstav</label>
+        <button class="key" id="key-backspace"></button>
+
+        <label for="key-newline">Ny linje</label>
+        <button class="key" id="key-newline"></button>
+
+        <label for="key-clear">Slet alt</label>
+        <button class="key" id="key-clear"></button>
+      </div>
+    </div>
+
+    <div id="info">
+      <h3>Vejledning 7</h3>
+      <p>Følgende taster kan anvendes:</p>
+      <ul>
+        <li>7/1: Vælger bogstav</li>
+        <li>4: Skriver bogstav</li>
+        <li>5: Skriver mellemrum</li>
+        <li>0: Sletter et bogstav</li>
+        <li>9: Ny linje</li>
+        <li>-: Sletter alt</li>
+      </ul>
+    </div>
+    <script src="dist/bundle.js"></script>
+  </body>
+</html>
