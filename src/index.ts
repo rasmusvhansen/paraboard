@@ -1,6 +1,16 @@
-// Import stylesheets
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/sw.js')
+    .then(function(registration) {
+      console.log('Service Worker registered with scope:', registration.scope);
+    })
+    .catch(function(err) {
+      console.log('Service worker registration failed:', err);
+    });
+}
+
 import { BehaviorSubject, fromEvent, interval, merge } from 'rxjs';
-import { throttle, tap, map, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { throttle, map, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
 
 interface Settings {
   alphabet: string;
@@ -175,7 +185,6 @@ store.state$.subscribe(state => {
     const charWidth = alphabetWidth / alphabetLength;
     const x = state.cursorPosition * charWidth;
     marker.style.transform = `translateX(${x}px)`;
-    console.log({ alphabetWidth, charWidth, alphabetLength, x });
     textDiv.textContent = state.text;
   }, 0);
 });
