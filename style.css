@@ -74,6 +74,22 @@ body {
   }
 }
 
+.main:focus {
+  outline: none;
+}
+
+.open-settings {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  cursor: pointer;
+}
+
+.open-settings svg {
+  width: 20px;
+  height: 20px;
+}
+
 #info {
   margin-left: 20px;
 }
@@ -87,7 +103,7 @@ body {
   right: 0;
 
   background: rgba(0, 0, 0, 0.3);
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
 }
@@ -100,6 +116,7 @@ body {
   border-radius: 10px;
   box-shadow: 5px 8px 10px;
   padding: 24px;
+  position: relative;
 }
 
 #settings label {
@@ -118,4 +135,16 @@ body {
 
 #settings button:focus {
   border: 2px solid red;
+}
+
+#settings svg {
+  width: 20px;
+  height: 20px;
+}
+
+#settings .close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  cursor: pointer;
 }

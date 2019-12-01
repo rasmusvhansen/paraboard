@@ -44,9 +44,22 @@ const KEY_DELAY = 500; //Bestemmer hastigheden hvormed cursor flytter sig når t
 const alphabetDiv: HTMLElement = document.getElementById('alphabet');
 const textDiv: HTMLElement = document.getElementById('text');
 const marker: HTMLElement = document.getElementById('marker');
+const main: HTMLElement = document.querySelector('.main');
+const close = document.querySelector('#settings .close');
+const settingsDiv = document.querySelector('#settings') as HTMLDivElement;
+const openSettings = document.querySelector('.open-settings');
 
-const keyUp$ = fromEvent<KeyboardEvent>(window, 'keyup');
-const keyEvents$ = fromEvent<KeyboardEvent>(window, 'keydown').pipe(throttle(ev => merge(interval(KEY_DELAY), keyUp$)));
+close.addEventListener('click', () => {
+  settingsDiv.style.display = 'none';
+  main.focus();
+});
+
+openSettings.addEventListener('click', () => (settingsDiv.style.display = 'flex'));
+
+main.focus();
+
+const keyUp$ = fromEvent<KeyboardEvent>(main, 'keyup');
+const keyEvents$ = fromEvent<KeyboardEvent>(main, 'keydown').pipe(throttle(ev => merge(interval(KEY_DELAY), keyUp$)));
 
 /************ SETINGS DIALOG  *****************/
 const changeKey = (key: Keys) => (ev: KeyboardEvent) => {
@@ -70,6 +83,9 @@ space.addEventListener('keydown', changeKey('space'));
 backspace.addEventListener('keydown', changeKey('backspace'));
 newLine.addEventListener('keydown', changeKey('newLine'));
 clear.addEventListener('keydown', changeKey('clear'));
+alphabetInput.addEventListener('input', ev =>
+  store.dispatch(new ChangeKey({ key: 'alphabet', value: alphabetInput.value }))
+);
 
 /************ SETINGS DIALOG END *****************/
 
@@ -85,9 +101,6 @@ const defaultSettings = {
 };
 const settings: Settings =
   (localStorage.getItem(SETTINGS) && JSON.parse(localStorage.getItem(SETTINGS))) || defaultSettings;
-
-alphabetDiv.textContent = settings.alphabet;
-const alphabetWidth = alphabetDiv.clientWidth;
 
 const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
 
@@ -116,7 +129,7 @@ class NewLine {
   readonly type = 'newline';
 }
 
-type Keys = keyof Omit<Settings, 'alphabet'>;
+type Keys = keyof Settings;
 
 class ChangeKey {
   readonly type = 'changekey';
@@ -156,10 +169,15 @@ function reducer(state: Model, msg: Message): { state: Model; effects?: Message[
 store.init({ cursorPosition: 16, text: '', settings });
 
 store.state$.subscribe(state => {
-  const charWidth = alphabetWidth / state.settings.alphabet.length;
-  const x = state.cursorPosition * charWidth;
-  marker.style.transform = `translateX(${x}px)`;
-  textDiv.textContent = state.text;
+  setTimeout(() => {
+    const alphabetWidth = alphabetDiv.clientWidth;
+    const alphabetLength = state.settings.alphabet.length;
+    const charWidth = alphabetWidth / alphabetLength;
+    const x = state.cursorPosition * charWidth;
+    marker.style.transform = `translateX(${x}px)`;
+    console.log({ alphabetWidth, charWidth, alphabetLength, x });
+    textDiv.textContent = state.text;
+  }, 0);
 });
 
 const settings$ = store.state$.pipe(
@@ -168,6 +186,10 @@ const settings$ = store.state$.pipe(
 );
 
 const alphabet$ = settings$.pipe(map(s => s.alphabet));
+
+alphabet$.subscribe(a => {
+  alphabetDiv.textContent = a;
+});
 
 settings$
   .pipe(
@@ -208,14 +230,11 @@ settings$.subscribe(s => {
   backspace.textContent = s.backspace;
   newLine.textContent = s.newLine;
   clear.textContent = s.clear;
+
+  Array.from(document.querySelectorAll('.legend')).forEach(
+    (e: HTMLSpanElement) => (e.textContent = s[e.dataset['key']])
+  );
   localStorage.setItem(SETTINGS, JSON.stringify(s));
-  console.log(s);
 });
 
 alphabet$.subscribe(a => (alphabetInput.value = a));
-
-function dispatch(store: Store, msg: Message, event: KeyboardEvent) {
-  store.dispatch(msg);
-  event.preventDefault();
-  return false;
-}
